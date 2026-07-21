@@ -9,7 +9,7 @@ export default function GlobalWidgets({ user }) {
         <NoticeBell />
         <SuggestionBox />
       </div>
-      <GlobalChat currentUserId={user?.id} />
+      <GlobalChat currentUserId={user?.id} isAdmin={!!user?.is_staff} />
     </>
   );
 }

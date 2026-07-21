@@ -24,9 +24,12 @@ export function useGlobalChat({ enabled, onMessage }) {
     ws.onmessage = (ev) => {
       let msg;
       try { msg = JSON.parse(ev.data); } catch { return; }
-      if (msg.type !== 'chat') return;
-      setMessages((prev) => [...prev, msg]);
-      onMessageRef.current?.(msg);
+      if (msg.type === 'chat') {
+        setMessages((prev) => [...prev, msg]);
+        onMessageRef.current?.(msg);
+      } else if (msg.type === 'chat_delete') {
+        setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+      }
     };
 
     return () => {

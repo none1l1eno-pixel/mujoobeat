@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { listChatHistory } from '../api/community';
+import { deleteChatMessage, listChatHistory } from '../api/community';
 import { useGlobalChat } from '../api/useGlobalChat';
 
-export default function GlobalChat({ currentUserId }) {
+export default function GlobalChat({ currentUserId, isAdmin }) {
   const [open, setOpen] = useState(false);
   const [unread, setUnread] = useState(0);
   const [text, setText] = useState('');
@@ -40,6 +40,11 @@ export default function GlobalChat({ currentUserId }) {
     setText('');
   };
 
+  const handleDelete = (id) => {
+    if (!id) return;
+    deleteChatMessage(id).catch(() => {});
+  };
+
   return (
     <>
       <button className="global-chat-fab" onClick={toggle} title="전체 채팅" aria-label="전체 채팅">
@@ -58,7 +63,12 @@ export default function GlobalChat({ currentUserId }) {
             {messages.map((m, i) => (
               <div key={m.id ?? i} className={`chat-msg ${m.user?.id === currentUserId ? 'mine' : ''}`}>
                 <span className="chat-msg-author">{m.user?.display_name || m.user?.email}</span>
-                <span className="chat-msg-text">{m.message}</span>
+                <span className="chat-msg-text">
+                  {m.message}
+                  {isAdmin && (
+                    <button className="chat-msg-delete" onClick={() => handleDelete(m.id)} title="메시지 삭제" aria-label="메시지 삭제">×</button>
+                  )}
+                </span>
               </div>
             ))}
           </div>

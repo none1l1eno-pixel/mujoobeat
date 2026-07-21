@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'display_name']
+        fields = ['id', 'email', 'display_name', 'is_staff']
 
 
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):

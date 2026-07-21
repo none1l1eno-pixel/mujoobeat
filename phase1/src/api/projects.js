@@ -2,6 +2,7 @@ import { apiFetch } from './client';
 
 export const listProjects = () => apiFetch('/api/projects/');
 export const listPublicProjects = () => apiFetch('/api/projects/public/');
+export const listAllProjectsAdmin = () => apiFetch('/api/projects/admin-all/');
 export const getProject = (id) => apiFetch(`/api/projects/${id}/`);
 export const createProject = (payload) => apiFetch('/api/projects/', { method: 'POST', body: payload });
 export const updateProject = (id, patch) => apiFetch(`/api/projects/${id}/`, { method: 'PATCH', body: patch });

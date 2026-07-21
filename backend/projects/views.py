@@ -33,6 +33,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer = ProjectListSerializer(qs, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, url_path='admin-all', permission_classes=[permissions.IsAdminUser])
+    def admin_all(self, request):
+        qs = Project.objects.all()
+        serializer = ProjectListSerializer(qs, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=['post'], url_path='collaborators')
     def add_collaborator(self, request, pk=None):
         project = self.get_object()
