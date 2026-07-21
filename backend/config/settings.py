@@ -21,6 +21,16 @@ _render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if _render_host:
     ALLOWED_HOSTS.append(_render_host)
 
+# Render(및 대부분의 PaaS)는 TLS를 프록시에서 끝내고 앱에는 평문 HTTP로 넘기면서
+# X-Forwarded-Proto 헤더로 원래 https였음을 알려준다. 이걸 안 믿으면 Django가
+# request.is_secure()를 False로 오판해서, 브라우저가 보내는 Origin: https://...
+# 헤더와 스킴이 안 맞아 CSRF 체크가 403으로 막는다(admin 로그인 등 모든 POST 폼).
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CSRF_TRUSTED_ORIGINS = [o for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o]
+if _render_host:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{_render_host}')
+
 INSTALLED_APPS = [
     'daphne',
     'django.contrib.admin',
