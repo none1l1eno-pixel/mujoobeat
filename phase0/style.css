@@ -1,0 +1,47 @@
+:root {
+  color-scheme: light dark;
+  font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+body {
+  max-width: 780px;
+  margin: 40px auto;
+  padding: 0 20px;
+  line-height: 1.6;
+}
+
+h1 { margin-bottom: 4px; }
+.lead { color: #888; margin-top: 0; }
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 16px;
+  border: 1px solid #8884;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+select { padding: 6px; }
+button {
+  padding: 6px 14px;
+  cursor: pointer;
+}
+button:disabled { cursor: not-allowed; opacity: 0.5; }
+
+.status { color: #888; font-size: 0.9em; }
+
+pre {
+  background: #8881;
+  padding: 12px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-size: 0.95em;
+}
+
+.note { color: #888; font-size: 0.9em; }
+
+ul#checklist { list-style: none; padding-left: 0; }
+ul#checklist li { padding: 4px 0; }

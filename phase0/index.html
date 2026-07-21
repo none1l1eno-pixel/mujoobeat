@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phase 0 — 반주 엔진 검증</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>Phase 0: 반주/박자 엔진 검증</h1>
+    <p class="lead">
+      UI 없이 하드코딩 멜로디 → 키 검출 → 규칙 기반 코드/드럼 생성 → Tone.js 재생까지 확인하는
+      엔진 검증용 페이지입니다. (plan.md 10장 Phase 0)
+    </p>
+
+    <section class="controls">
+      <label for="melodySelect">테스트 멜로디</label>
+      <select id="melodySelect"></select>
+      <button id="playBtn">▶ 재생</button>
+      <button id="stopBtn">■ 정지</button>
+      <span id="status" class="status"></span>
+    </section>
+
+    <section>
+      <h2>생성 결과</h2>
+      <pre id="result">재생 버튼을 누르면 결과가 표시됩니다.</pre>
+    </section>
+
+    <section>
+      <h2>기술 기준 체크 (plan.md 4장 2번)</h2>
+      <ul id="checklist"></ul>
+    </section>
+
+    <section>
+      <h2>블라인드 테스트 판정 기준 (plan.md 4장)</h2>
+      <ol>
+        <li>비음악인 5명에게 들려줬을 때 3명 이상 "곡처럼 들린다"고 답하는가</li>
+        <li>"미디 벨소리 같다"는 평가가 3명 이상이면 실패 → 음색/패턴 개선 필요</li>
+      </ol>
+      <p class="note">
+        못난 멜로디(음역 좁음 / 비다이어토닉 / 리듬 단조) 결과도 포함해 판정할 것 — 예쁜 멜로디만으로 통과 판정 금지.
+      </p>
+    </section>
+  </main>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+services:
+  phase0:
+    build: .
+    ports:
+      - "8080:80"
