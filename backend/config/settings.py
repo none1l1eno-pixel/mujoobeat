@@ -15,6 +15,11 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-only-change-in-production')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# Render는 서비스별 공개 도메인을 RENDER_EXTERNAL_HOSTNAME으로 자동 주입한다 —
+# 배포 시 최종 도메인(이름 충돌로 접미사가 붙어도)을 몰라도 항상 맞게 허용된다.
+_render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if _render_host:
+    ALLOWED_HOSTS.append(_render_host)
 
 INSTALLED_APPS = [
     'daphne',
