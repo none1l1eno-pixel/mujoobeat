@@ -1,14 +1,18 @@
 """
 AI 격려 코멘트 (plan.md 5장 P3, C안 확정: 점수 없이 잘한 점+개선 팁).
-곡 데이터를 텍스트로 요약해 LLM(로컬 Ollama의 llama3.1:8b)에 보내고 결과를 그대로
+곡 데이터를 텍스트로 요약해 LLM(Groq의 llama-3.1-8b-instant)에 보내고 결과를 그대로
 돌려준다 — Django는 "LLM API 중계"만 하고 음악적 판단은 하지 않는다(9.1절 원칙).
+
+로컬 Ollama 대신 Groq를 쓰는 이유: Render 무료 티어(RAM 512MB)는 8B 모델을
+자체 서빙할 수 없어서, 배포 환경에서 실제로 호출 가능한 무료 호스팅 API로 교체.
 """
 import os
 
 import requests
 
-OLLAMA_BASE_URL = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
-OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'llama3.1:8b')
+GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
+GROQ_MODEL = os.environ.get('GROQ_MODEL', 'llama-3.1-8b-instant')
 
 NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 KEY_NAMES = {'major': '장조', 'minor': '단조'}
@@ -60,13 +64,21 @@ def generate_comment(project):
         f'곡 정보:\n{summary}\n\n답변:'
     )
 
+    if not GROQ_API_KEY:
+        raise RuntimeError('GROQ_API_KEY가 설정되지 않았습니다.')
+
     try:
         res = requests.post(
-            f'{OLLAMA_BASE_URL}/api/generate',
-            json={'model': OLLAMA_MODEL, 'prompt': prompt, 'stream': False},
-            timeout=60,
+            GROQ_API_URL,
+            headers={'Authorization': f'Bearer {GROQ_API_KEY}'},
+            json={
+                'model': GROQ_MODEL,
+                'messages': [{'role': 'user', 'content': prompt}],
+                'temperature': 0.7,
+            },
+            timeout=30,
         )
         res.raise_for_status()
-        return res.json().get('response', '').strip()
+        return res.json()['choices'][0]['message']['content'].strip()
     except requests.RequestException as exc:
         raise RuntimeError(f'LLM 서버 호출 실패: {exc}') from exc
